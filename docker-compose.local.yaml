@@ -1,0 +1,47 @@
+version: '3.8'
+services:
+  opentelemetry-nestjs-mysql:
+    image: mysql:8.0.29
+    container_name: opentelemetry-nestjs-mysql
+    environment:
+      - MYSQL_DATABASE=opentelemetry-nestjs
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=root
+      - TZ=UTC
+    command: --default_authentication_plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - .mysql-volume:/var/lib/mysql
+
+    ports:
+      - '3306:3306'
+
+  opentelemetry-nestjs-redis:
+    image: redis:6.2.3
+    container_name: opentelemetry-nestjs-redis
+    command: redis-server --requirepass password
+    volumes:
+      - .redis-volume:/data
+
+    ports:
+      - '6379:6379'
+
+  opentelemetry-jaegertracing:
+    image: jaegertracing/all-in-one:1.35
+    container_name: opentelemetry-jaegertracing
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=:9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - '6831:6831/udp'
+      - '6832:6832/udp'
+      - '5778:5778'
+      - '16686:16686'
+      - '4317:4317'
+      - '4318:4318'
+      - '14250:14250'
+      - '14268:14268'
+      - '14269:14269'
+      - '9411:9411'
