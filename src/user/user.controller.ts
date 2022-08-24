@@ -17,6 +17,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get('test/cache')
+  async findCache() {
+    return await this.userService.findCache();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);

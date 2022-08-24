@@ -11,6 +11,8 @@ import { HttpInstrumentation } from '@opentelemetry/instrumentation-http';
 import { ExpressInstrumentation } from '@opentelemetry/instrumentation-express';
 import { NestInstrumentation } from '@opentelemetry/instrumentation-nestjs-core';
 import * as api from '@opentelemetry/api';
+import { RedisInstrumentation } from "@opentelemetry/instrumentation-redis";
+import { MySQL2Instrumentation } from "@opentelemetry/instrumentation-mysql2";
 
 let provider: NodeTracerProvider;
 export function tracing() {
@@ -32,20 +34,20 @@ export function tracing() {
     ),
   );
 
-  provider.register();
-
   registerInstrumentations({
     instrumentations: [
-      // Express instrumentation expects HTTP layer to be instrumented
-      new HttpInstrumentation({
-        requestHook: (span, request) => {
-          span.setAttribute('custom request hook attribute', 'request');
-        },
-      }),
+      // // Express instrumentation expects HTTP layer to be instrumented
+      new HttpInstrumentation(),
       new ExpressInstrumentation(),
       new NestInstrumentation(),
+
+      // ioredis still not working, but can collect for typeorm cache
+      new RedisInstrumentation(),
+      new MySQL2Instrumentation(),
     ],
   });
+
+  provider.register();
 }
 
 function startSpan(spanName: string): api.Span {
