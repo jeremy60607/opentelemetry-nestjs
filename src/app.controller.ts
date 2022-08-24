@@ -15,8 +15,8 @@ export class AppController {
     return await this.appService.getHello();
   }
 
-  @Get(':id')
-  async getLaa(@Param('id') id: string): Promise<string> {
-    return await this.appService.getHello();
-  }
+  // @Get(':id')
+  // async getLaa(@Param('id') id: string): Promise<string> {
+  //   return await this.appService.getHello();
+  // }
 }
